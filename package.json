@@ -1,0 +1,26 @@
+{
+  "name": "foodsta",
+  "version": "1.0.0",
+  "description": "Foodsta - Food delivery application",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
+    "build:all": "cd client && npm run build",
+    "build:client": "cd client && npm run build",
+    "build:server": "echo 'Server is ready'",
+    "start": "node server/server.js",
+    "start:server": "cd server && node server.js",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "keywords": [
+    "food",
+    "delivery",
+    "react",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC"
+}
