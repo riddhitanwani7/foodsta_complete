@@ -1,26 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "npm run build:all",
-  "outputDirectory": "client/dist",
-  "env": {
-    "MONGO_URI": "@mongodb_uri",
-    "JWT_SECRET": "@jwt_secret",
-    "JWT_REFRESH_SECRET": "@jwt_refresh_secret",
-    "IMAGEKIT_PUBLIC_KEY": "@imagekit_public_key",
-    "IMAGEKIT_PRIVATE_KEY": "@imagekit_private_key",
-    "IMAGEKIT_URL_ENDPOINT": "@imagekit_url_endpoint",
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "server/server.js": {
-      "memory": 1024,
-      "maxDuration": 60
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/server/server.js"
-    }
-  ]
+  "buildCommand": "npm install && cd client && npm install && npm run build",
+  "outputDirectory": "client/dist"
 }
