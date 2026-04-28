@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({ 
-  baseURL: process.env.VITE_API_URL || '/api'
+  baseURL: 'https://foodstaaa-backend.vercel.app/api'
 });
 
 // Attach token to every request
