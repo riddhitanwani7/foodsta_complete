@@ -42,52 +42,53 @@ const [urlVideoOk, setUrlVideoOk] = useState(false);
     handleFile(f);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!form.videoUrl.trim()) { setError('Video URL is required.'); setUploading(false); return; }
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  // Move URL validation INSIDE the else block below
+  setError('');
+  setSuccess('');
+  setUploading(true);
+  setProgress(0);
+
+  try {
+    if (uploadMode === 'file') {
+      if (!file) { setError('Please select a video file.'); setUploading(false); return; }
+      const formData = new FormData();
+      formData.append('video', file);
+      formData.append('name', form.name);
+      formData.append('description', form.description);
+      if (form.cuisine) formData.append('cuisine', form.cuisine);
+
+      const interval = setInterval(() => {
+        setProgress((p) => Math.min(p + 8, 85));
+      }, 300);
+
+      await createFood(formData);
+      clearInterval(interval);
+      setProgress(100);
+    } else {
+      // URL validation only here
+      if (!form.videoUrl.trim()) { setError('Video URL is required.'); setUploading(false); return; }
       if (!urlVideoOk) { setError('Video URL could not be loaded. Please use a direct .mp4 link.'); setUploading(false); return; }
-
-    setError('');
-    setSuccess('');
-    setUploading(true);
-    setProgress(0);
-
-    try {
-      if (uploadMode === 'file') {
-        if (!file) { setError('Please select a video file.'); setUploading(false); return; }
-        const formData = new FormData();
-        formData.append('video', file);
-        formData.append('name', form.name);
-        formData.append('description', form.description);
-        if (form.cuisine) formData.append('cuisine', form.cuisine);
-
-        // Simulate progress for UX
-        const interval = setInterval(() => {
-          setProgress((p) => Math.min(p + 8, 85));
-        }, 300);
-
-        await createFood(formData);
-        clearInterval(interval);
-        setProgress(100);
-      } else {
-        if (!form.videoUrl.trim()) { setError('Video URL is required.'); setUploading(false); return; }
-        await createFoodWithUrl({
-          name: form.name,
-          description: form.description,
-          cuisine: form.cuisine,
-          video: form.videoUrl,
-        });
-        setProgress(100);
-      }
-
-      setSuccess('Reel uploaded successfully! 🎉');
-      setTimeout(() => navigate('/app'), 1500);
-    } catch (err) {
-      setError(err.response?.data?.message || 'Upload failed. Please try again.');
-    } finally {
-      setUploading(false);
+      
+      await createFoodWithUrl({
+        name: form.name,
+        description: form.description,
+        cuisine: form.cuisine,
+        video: form.videoUrl,
+      });
+      setProgress(100);
     }
-  };
+
+    setSuccess('Reel uploaded successfully! 🎉');
+    setTimeout(() => navigate('/app'), 1500);
+  } catch (err) {
+    setError(err.response?.data?.message || 'Upload failed. Please try again.');
+  } finally {
+    setUploading(false);
+  }
+};
 
   return (
     <div className="upload-container" style={{ overflowY: 'auto', height: '100dvh' }}>
